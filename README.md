@@ -6,7 +6,7 @@ Jeu de mini-golf 1v1 en 2D avec mécanique de placement inversé. Développé av
 
 **1. Récupérer le projet**
 ```bash
-git clone [https://github.com/TonPseudo/golfight.git](https://github.com/TonPseudo/golfight.git)
+git clone [https://github.com/Hitghul/golfight.git](https://github.com/TonPseudo/golfight.git)
 cd golfight
 
 ```
