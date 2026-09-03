@@ -1,0 +1,33 @@
+golfight/
+│
+├── main.py                 # initialise Pygame et GameManager
+├── requirements.txt        # installation de pygame, pymunk
+├── tree.txt                # arborescence
+|
+├── assets/                 # ressources externes
+│   ├── sounds/             # bounce.wav, hole.wav, win.wav...
+│   ├── images/             # ball.png, wall.png, background.png...
+│   └── maps/               # map1.json, map2.json... (coordonnées des murs)
+│
+└── src/
+    ├── __init__.py
+    ├── constants.py        # tailles, couleurs, constantes physiques...
+    ├── map_loader.py       # lit les fichiers JSON et génère les murs
+    │
+    ├── entities/           # objets du jeu
+    │   ├── __init__.py
+    │   ├── ball.py         # classe Balle
+    │   ├── wall.py         # classe Mur
+    │   └── hole.py         # classe Trou
+    │
+    ├── core/               # logique du jeu
+    │   ├── __init__.py
+    │   ├── physics.py      # initialise pymunk
+    │   └── game_state.py   # machine à états (Menu -> Choix Map -> Placement -> Jeu -> Fin)
+    │
+    └── screens/            # l'affichage à chaque phase
+        ├── __init__.py
+        ├── menu.py         # sélection du mode
+        ├── placement.py    # drag and drop et timer pour placer les objets
+        ├── solo.py         # mode entraînement (1 balle, 1 trou)
+        └── versus.py       # Mode 1v1 (2 balles, gestion du temps réel)
