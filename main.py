@@ -1,22 +1,15 @@
 import pygame
-import sys
-from src.constants import WIDTH, HEIGHT, BG_COLOR, FPS
+from src.constants import WIDTH, HEIGHT
+from src.core.engine import GameEngine
 
 def main():
     pygame.init()
+    pygame.font.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Golfight")
-    clock = pygame.time.Clock()
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        screen.fill(BG_COLOR)
-        pygame.display.flip()
-        clock.tick(FPS)
+    
+    engine = GameEngine(screen, pygame.time.Clock())
+    engine.run()
 
 if __name__ == "__main__":
     main()
