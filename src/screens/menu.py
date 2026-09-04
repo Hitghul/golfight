@@ -5,8 +5,16 @@ from src.utils.ui import draw_button, draw_text
 
 class MenuScene(Scene):
     def __init__(self):
+        self.next = None
         self.btn_solo = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 - 40, 200, 60)
         self.btn_1v1 = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 + 40, 200, 60)
+    
+    def process_inputs(self, inputs):
+        if inputs.mouse_down:
+            if self.btn_solo.collidepoint(inputs.mouse_down):
+                self.next = "SOLO"
+            elif self.btn_1v1.collidepoint(inputs.mouse_down):
+                self.next = "1V1"
 
     def render(self, screen):
         mouse_pos = pygame.mouse.get_pos()
@@ -15,3 +23,6 @@ class MenuScene(Scene):
         draw_text(screen, "GOLFIGHT", (WIDTH//2, HEIGHT//4), font_size=72, center=True)
         draw_button(screen, "Solo", self.btn_solo, (50, 50, 50), (100, 100, 100), mouse_pos)
         draw_button(screen, "1 Vs 1", self.btn_1v1, (50, 50, 50), (100, 100, 100), mouse_pos)
+
+    def get_next_scene(self):
+        return self.next
