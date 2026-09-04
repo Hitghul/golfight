@@ -1,0 +1,4 @@
+WIDTH, HEIGHT = 1024, 768
+FPS = 60
+
+BG_COLOR = (34, 139, 34)  # Green

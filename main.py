@@ -1,41 +1,22 @@
 import pygame
 import sys
-
-WIDTH, HEIGHT = 1024, 768
-FPS = 60
-
-# Initialisation de Pygame
-pygame.init()
-
-# Création de la fenêtre
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Golfight")
-
-# FPS
-clock = pygame.time.Clock()
+from src.constants import WIDTH, HEIGHT, BG_COLOR, FPS
 
 def main():
-    running = True
-    
-    # Boucle de jeu principale
-    while running:
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Golfight")
+    clock = pygame.time.Clock()
 
-        # Quitter le programme
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit()
 
-        # Remplir l'écran en vert
-        screen.fill((34, 139, 34))  
-        
-        # Rafraîchir l'écran
+        screen.fill(BG_COLOR)
         pygame.display.flip()
-        
         clock.tick(FPS)
-
-    # Fermeture
-    pygame.quit()
-    sys.exit()
 
 if __name__ == "__main__":
     main()
