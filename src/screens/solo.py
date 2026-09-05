@@ -1,19 +1,29 @@
 from src.core.scene import Scene
-from src.constants import WIDTH, HEIGHT, BG_COLOR
-from src.utils.ui import draw_text
+from src.core.physics import create_space, update_space
+from src.entities.ball import Ball
+from src.entities.wall import Wall
+from src.entities.hole import Hole
+from src.systems.renderer import draw_entities
 
 class SoloScene(Scene):
     def __init__(self):
         self.next = None
+        self.space = create_space()
+        self.space.gravity = (0, 900)  # test de gravité
+        
+        # test
+        self.ball = Ball(self.space, 512, 100)
+        self.hole = Hole(800, 500)
+        self.walls = [Wall(self.space, (200, 600), (824, 600))]
 
     def process_inputs(self, inputs):
-        if inputs.escape:
-            self.next = "MENU"
+        if inputs.escape: self.next = "MENU"
+
+    def update(self):
+        update_space(self.space)
 
     def render(self, screen):
-        screen.fill(BG_COLOR)
-        draw_text(screen, "MODE SOLO", (WIDTH//2, HEIGHT//2), center=True)
-        draw_text(screen, "ECHAP pour revenir au Menu", (WIDTH//2, HEIGHT//2 + 50), font_size=20, center=True)
+        draw_entities(screen, self.walls, self.ball, self.hole)
 
     def get_next_scene(self):
         return self.next
