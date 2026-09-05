@@ -1,6 +1,7 @@
 import pygame
 import sys
 from src.core.events import poll_events
+from src.core.scene import Scene
 from src.screens.menu import MenuScene
 from src.screens.solo import SoloScene
 from src.screens.versus import VersusScene
@@ -15,7 +16,7 @@ class GameEngine:
             "SOLO": SoloScene,
             "1V1": VersusScene
         }
-        self.current_scene = self.scene_registry["MENU"]()
+        self.current_scene: Scene = self.scene_registry["MENU"]()
 
     def run(self):
         while True:
