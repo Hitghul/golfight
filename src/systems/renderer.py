@@ -1,5 +1,5 @@
 import pygame
-from src.constants import BG_COLOR, WALL_COLOR, BALL_COLOR, HOLE_COLOR, BALL_RADIUS, HOLE_RADIUS
+from src.constants import BG_COLOR, WALL_COLOR, BALL_COLOR, HOLE_COLOR, BALL_RADIUS, HOLE_RADIUS, AIM_COLOR
 
 def draw_entities(screen, walls, ball, hole, hide_ball=False):
     screen.fill(BG_COLOR)
@@ -8,3 +8,8 @@ def draw_entities(screen, walls, ball, hole, hide_ball=False):
         pygame.draw.line(screen, WALL_COLOR, wall.p1, wall.p2, 10)
     if not hide_ball:
         pygame.draw.circle(screen, BALL_COLOR, ball.pos, BALL_RADIUS)
+
+def draw_aim_line(screen, ball_pos, aim_vector):
+    if aim_vector:
+        target = (ball_pos[0] + aim_vector[0], ball_pos[1] + aim_vector[1])
+        pygame.draw.line(screen, AIM_COLOR, ball_pos, target, 4)

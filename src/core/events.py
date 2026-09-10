@@ -6,6 +6,7 @@ class GameInputs:
     quit: bool = False
     escape: bool = False
     mouse_down: tuple | None = None
+    mouse_up: tuple | None = None
     mouse_pos: tuple = (0, 0)
 
 def poll_events() -> GameInputs:
@@ -17,4 +18,6 @@ def poll_events() -> GameInputs:
             inputs.escape = True
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             inputs.mouse_down = event.pos
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            inputs.mouse_up = event.pos
     return inputs
