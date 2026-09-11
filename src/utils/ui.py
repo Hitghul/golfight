@@ -2,11 +2,11 @@ import pygame
 
 def draw_text(surface, text, pos, font_size=28, color=(255, 255, 255), center=False):
     font = pygame.font.SysFont("Arial", font_size, bold=True)
-    text_surface = font.render(text, True, color)
+    text_surf = font.render(text, True, color)
     if center:
-        surface.blit(text_surface, text_surface.get_rect(center=pos))
+        surface.blit(text_surf, text_surf.get_rect(center=pos))
     else:
-        surface.blit(text_surface, pos)
+        surface.blit(text_surf, pos)
 
 def draw_button(surface, text, rect, base_color, hover_color, mouse_pos, font_size=36):
     font = pygame.font.SysFont("Arial", font_size)
@@ -16,3 +16,8 @@ def draw_button(surface, text, rect, base_color, hover_color, mouse_pos, font_si
     pygame.draw.rect(surface, color, rect, border_radius=8)
     text_surf = font.render(text, True, (255, 255, 255))
     surface.blit(text_surf, text_surf.get_rect(center=rect.center))
+    
+def draw_overlay(surface):
+    overlay = pygame.Surface((surface.get_width(), surface.get_height()), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 150))
+    surface.blit(overlay, (0, 0))
