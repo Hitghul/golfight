@@ -6,7 +6,6 @@ from src.levels.level_factory import build_level
 from src.systems.slingshot import Slingshot
 from src.systems.renderer import draw_entities, draw_aim_line
 from src.utils.ui import draw_text, draw_button, draw_overlay
-from src.constants import WIDTH, HEIGHT
 
 class SoloScene(Scene):
     def __init__(self):
@@ -15,12 +14,15 @@ class SoloScene(Scene):
         self.walls, self.ball, self.hole = build_level(self.space, load_raw_map_data(get_random_map_name()))
         
         self.slingshot = Slingshot()
-        self.btn_quit = pygame.Rect(WIDTH - 120, 20, 100, 40)
         
         self.score = 0
         self.is_won = False
         self.win_timer = 0
         self.current_mouse_pos = (0, 0)
+
+    def _get_quit_btn(self):
+        from src.constants import WIDTH
+        return pygame.Rect(WIDTH - 120, 20, 100, 40)
 
     def process_inputs(self, inputs):
         self.current_mouse_pos = inputs.mouse_pos
@@ -29,7 +31,7 @@ class SoloScene(Scene):
             self.next = "MENU"
             
         if inputs.mouse_down:
-            if self.btn_quit.collidepoint(inputs.mouse_down):
+            if self._get_quit_btn().collidepoint(inputs.mouse_down):
                 self.next = "MENU"
             elif not self.is_won and self.ball.is_stopped():
                 self.slingshot.start(inputs.mouse_down, self.ball)
@@ -56,11 +58,12 @@ class SoloScene(Scene):
         draw_aim_line(screen, self.ball.pos, aim_vector)
         
         draw_text(screen, f"Hits : {self.score}", (20, 20))
-        draw_button(screen, "Leave", self.btn_quit, (150, 50, 50), (200, 50, 50), self.current_mouse_pos, 20)
+        draw_button(screen, "Leave", self._get_quit_btn(), (150, 50, 50), (200, 50, 50), self.current_mouse_pos, 20)
 
         if self.is_won:
+            w, h = screen.get_size()
             draw_overlay(screen)
-            draw_text(screen, "Scored !", (WIDTH//2, HEIGHT//2), 50, (255, 215, 0), center=True)
+            draw_text(screen, "Scored !", (w//2, h//2), 50, (255, 215, 0), center=True)
 
     def get_next_scene(self):
         return self.next

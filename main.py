@@ -5,7 +5,8 @@ from src.core.engine import GameEngine
 def main():
     pygame.init()
     pygame.font.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
     pygame.display.set_caption("Golfight")
     
     engine = GameEngine(screen, pygame.time.Clock())

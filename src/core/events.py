@@ -8,6 +8,7 @@ class GameInputs:
     mouse_down: tuple | None = None
     mouse_up: tuple | None = None
     mouse_pos: tuple = (0, 0)
+    resized: tuple | None = None
 
 def poll_events() -> GameInputs:
     inputs = GameInputs(mouse_pos=pygame.mouse.get_pos())
@@ -20,4 +21,6 @@ def poll_events() -> GameInputs:
             inputs.mouse_down = event.pos
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             inputs.mouse_up = event.pos
+        elif event.type == pygame.VIDEORESIZE:
+            inputs.resized = (event.w, event.h)
     return inputs
