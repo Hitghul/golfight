@@ -22,6 +22,7 @@ FORMAT :
 
 3. Résultats et observations
     3.1 Le code simple du server 2.1 marche.
+    3.2 La physique de la balle 2.3 est bien amélioré. Mais la durée de deceleration semble trop longue avant que le joueur puisse frapper à nouveau la balle.
 
 4. Problèmes rencontrés
     4.1 Seth : AU début problème de lancer le jeu sur local car la version de Python installée sur PC ne support pas certain fonctions (tuples)
