@@ -22,6 +22,7 @@ FORMAT :
 
 3. Résultats et observations
     3.1 Le code simple du server 2.1 marche.
+    3.2 La physique de la balle 2.3 est bien amélioré. Mais la durée de deceleration semble trop longue avant que le joueur puisse frapper à nouveau la balle.
 
 4. Problèmes rencontrés
     4.1 Seth : AU début problème de lancer le jeu sur local car la version de Python installée sur PC ne support pas certain fonctions (tuples)
@@ -29,3 +30,25 @@ FORMAT :
 5. Idées et prochaines étapes
     5.1 Idée : Pour 4.1 , penser à créer un contaaineurisation utilsant docker afin d'éviter le problème de different version de technologie installé.
 -----------------------------------------------------------------------
+
+24 Sept 2026 :
+
+1. Objectif du jour
+    1.1 Adapter le code source de jeux afin de pouvoir lancer en mode multi jouer (server)
+    1.2 Modifier/régler le problème de physique constaté la semaine dernière
+    1.3 Ecrire/désiner l'architecture de bases de données
+    1.4 Améliorer l'interface
+
+2. Ce qui a été fait
+    2.1 Seth :
+    2.2 Sofiane :
+    2.3 Baptiste :
+
+3. Résultats et observations
+    3.1
+
+4. Problèmes rencontrés
+    4.1
+
+5. Idées et prochaines étapes
+    5.1 Idée :
