@@ -1,5 +1,5 @@
 import pymunk
-from src.constants import BALL_RADIUS, BALL_MASS
+from src.constants import BALL_RADIUS, BALL_MASS, SHOOT_SPEED_THRESHOLD
 
 class Ball:
     def __init__(self, space, x, y):
@@ -15,9 +15,14 @@ class Ball:
         pymunk.Body.update_velocity(body, gravity, damping, dt)
         if body.velocity.length < 2:
             body.velocity = (0, 0)
+
+    @property
+    def speed(self):
+        return self.body.velocity.length
+
     @property
     def pos(self):
         return (int(self.body.position.x), int(self.body.position.y))
 
-    def is_stopped(self, threshold=1):
-        return self.body.velocity.length <= threshold
+    def is_stopped(self, threshold=SHOOT_SPEED_THRESHOLD):
+        return self.speed <= threshold

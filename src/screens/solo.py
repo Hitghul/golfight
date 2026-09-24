@@ -6,6 +6,7 @@ from src.levels.level_factory import build_level
 from src.systems.slingshot import Slingshot
 from src.systems.renderer import draw_entities, draw_aim_line
 from src.utils.ui import draw_text, draw_button, draw_overlay
+from src.constants import SHOOT_SPEED_THRESHOLD
 
 class SoloScene(Scene):
     def __init__(self):
@@ -59,6 +60,11 @@ class SoloScene(Scene):
         
         draw_text(screen, f"Hits : {self.score}", (20, 20))
         draw_button(screen, "Leave", self._get_quit_btn(), (150, 50, 50), (200, 50, 50), self.current_mouse_pos, 20)
+
+        w, h = screen.get_size()
+        ready = self.ball.is_stopped()
+        color = (100, 255, 100) if ready else (255, 180, 180)
+        draw_text(screen, f"Vitesse: {self.ball.speed:.1f} / {SHOOT_SPEED_THRESHOLD}", (w - 230, h - 35), font_size=20, color=color)
 
         if self.is_won:
             w, h = screen.get_size()
