@@ -5,9 +5,10 @@ class Hole:
     def __init__(self, x, y, radius=HOLE_RADIUS):
         self.pos = (x, y)
         self.radius = radius
-        self.influence_radius = radius * 3.0  # 45px autour du centre
-        self.attraction_strength = 2800.0     # Accélération pour courber nettement la trajectoire
+        self.influence_radius = radius * 2.0  # 30px autour du centre
+        self.attraction_strength = 1400.0     # Réduit : dévie sans trop aspirer les balles rapides
         self.capture_speed = 180.0            # Vitesse maximale pour être aspirée
+        self.speed_damping_factor = 350.0     # Plus la balle est rapide, moins elle est attirée
 
     def apply_gravity(self, ball, dt=1.0 / FPS):
         """Applique l'effet de cuvette physique : dévie la trajectoire selon la vitesse."""
@@ -21,6 +22,12 @@ class Hole:
             # Pente non-linéaire : très forte attraction près du bord du trou
             intensity = 1.0 - (dist / self.influence_radius)
             accel = self.attraction_strength * (intensity ** 1.5)
+
+            # Modulation par vitesse : une balle rapide est peu attirée (effet déviation)
+            # Une balle lente est fortement aspirée (effet cuvette)
+            ball_speed = ball.body.velocity.length
+            speed_factor = 1.0 / (1.0 + ball_speed / self.speed_damping_factor)
+            accel *= speed_factor
 
             # Application directe sur la vitesse (évite d'être réinitialisé par les substeps de Pymunk)
             vx = ball.body.velocity.x + (nx * accel * dt)
