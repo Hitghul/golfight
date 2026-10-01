@@ -43,6 +43,9 @@ FORMAT :
     2.1 Seth :
     2.2 Sofiane :
     2.3 Baptiste :
+        1. Creation d'une branche physique
+        2. Ajout d'un indicateur de vitesse de la balle
+        3. Ajout d'un seuil de vitesse pour le delai de tir
 
 3. Résultats et observations
     3.1
