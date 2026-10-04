@@ -40,9 +40,7 @@ FORMAT :
     1.4 Améliorer l'interface
 
 2. Ce qui a été fait
-    2.1 Seth :
-    2.2 Sofiane :
-    2.3 Baptiste :
+    2.1 Baptiste :
         1. Creation d'une branche physique
         2. Ajout d'un indicateur de vitesse de la balle
         3. Ajout d'un seuil de vitesse pour le delai de tir
@@ -51,11 +49,34 @@ FORMAT :
     3.1 :
 
 4. Problèmes rencontrés
-    4.1 : 
+    4.1 :
     Choix de l'architecture, Besoin d'un serveur ? Ou on continue avec les sockets?
-    4.2 : 
+    4.2 :
     Enjeu de sécurité si on choisie une implémentation client side etc
 
 5. Idées et prochaines étapes
     5.1 Idée :
 
+
+----------------------------------------------------------------------
+
+01 Oct 2026 :
+
+1. Objectif du jour
+    1.1 Défini le cahier de charge.
+    1.2 Déployer sur Render
+
+2. Ce qui a été fait
+    2.1 Seth : Mise en place d'une communication TCP entre un plusieur clients
+
+3. Résultats et observations
+    3.1
+
+4. Problèmes rencontrés
+    4.1
+
+5. Idées et prochaines étapes
+    5.1 Idée :
+
+6. Prise de décision :
+    6.1 Changement de plan concernant l'emplacement des calculs physiques, suite aux précisions de l'enseignant sur l'évaluation et les exigences attendues.
