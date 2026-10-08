@@ -70,6 +70,7 @@ FORMAT :
     2.1 Seth : Mise en place d'une communication TCP entre un plusieur clients
     2.2 Sofiane : Version web du jeu (partiel) pour le déploiement sur Render : 
         La physique tourne côté serveur, et la position de la balle est envoyée 60 fois par seconde au client web
+    2.3 Baptiste : Recherche sur une architecture de synchronisation client-serveur / mécanismes anti-triche
 
 3. Résultats et observations
     3.1 Sofiane : La version partiel du jeu fonctionne en lançant https://golfight.onrender.com/
@@ -82,3 +83,17 @@ FORMAT :
 
 6. Prise de décision :
     6.1 Changement de plan concernant l'emplacement des calculs physiques, suite aux précisions de l'enseignant sur l'évaluation et les exigences attendues.
+
+
+08 Oct 2026 :
+
+1. Objectif du jour
+    1.1 Remanier le projet et les technologies choisies par rapport aux nouvelles informations sur l'évaluation
+
+2. Ce qui a été fait
+    Seth + Baptiste + Sofiane : 
+        Changement de MVP - De asynchrone à synchrone ; feature de asynchrone ajouté en bonus.
+        Elimination Fast API pour Django 
+        Reçu à nouveau les consignes
+        Requalification de diagramme de gants par rapport à technologie choisie
+        Grosse restructuration du projet ( dû à la nouvelle consigne et méthode de notation)
