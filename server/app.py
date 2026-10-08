@@ -17,10 +17,11 @@ async def receive_shots(ws, game):
 async def play(ws: WebSocket):
     await ws.accept()
     game = Game()
-    await ws.send_json(game.level)
+    await ws.send_json(game.level_message())
     receiver = asyncio.create_task(receive_shots(ws, game))
     while not receiver.done():
-        game.update()
+        if game.update():
+            await ws.send_json(game.level_message())
         await ws.send_json(game.ball.pos)
         await asyncio.sleep(1 / 60)
 
