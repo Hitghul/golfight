@@ -68,15 +68,17 @@ FORMAT :
 
 2. Ce qui a été fait
     2.1 Seth : Mise en place d'une communication TCP entre un plusieur clients
+    2.2 Sofiane : Version web du jeu (partiel) pour le déploiement sur Render : 
+        La physique tourne côté serveur, et la position de la balle est envoyée 60 fois par seconde au client web
 
 3. Résultats et observations
-    3.1
+    3.1 Sofiane : La version partiel du jeu fonctionne en lançant https://golfight.onrender.com/
 
 4. Problèmes rencontrés
-    4.1
+    4.1 Sofiane : Le portage web n'est pas complet : il manque des fonctionalités
 
 5. Idées et prochaines étapes
-    5.1 Idée :
+    5.1 Idée : Sofiane : porter le mode solo complet puis la gestion de scènes dans la version web
 
 6. Prise de décision :
     6.1 Changement de plan concernant l'emplacement des calculs physiques, suite aux précisions de l'enseignant sur l'évaluation et les exigences attendues.
