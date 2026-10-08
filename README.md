@@ -42,3 +42,12 @@ pip install -r requirements.txt
 python main.py
 
 ```
+
+**5. Lancer le site en local**
+
+```bash
+daphne server.asgi:application
+
+```
+
+Puis ouvrir http://localhost:8000 dans le navigateur. 

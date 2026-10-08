@@ -7,11 +7,10 @@ let ball = null;
 let aimStart = null;
 let mouse = null;
 
-// First message is the level, then the ball position every frame
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  if (level === null) level = data;
-  else ball = data;
+  if (Array.isArray(data)) ball = data;
+  else level = data;
 };
 
 function mousePos(event) {
@@ -59,6 +58,9 @@ function draw() {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
     drawCircle(ball[0], ball[1], 10, "white");
+    ctx.fillStyle = "white";
+    ctx.font = "bold 28px Arial";
+    ctx.fillText(`Score : ${level.score}`, 20, 45);
     if (aimStart) {
       drawLine(ball[0], ball[1], ball[0] + aimStart[0] - mouse[0], ball[1] + aimStart[1] - mouse[1], 4, "yellow");
     }
