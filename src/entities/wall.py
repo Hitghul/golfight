@@ -1,4 +1,5 @@
 import pymunk
+from src.constants import COLLISION_TYPE_WALL
 
 class Wall:
     def __init__(self, space, p1, p2, thickness=15):
@@ -6,6 +7,7 @@ class Wall:
         self.shape = pymunk.Segment(self.body, p1, p2, thickness)
         self.shape.elasticity = 0.85
         self.shape.friction = 0.5
+        self.shape.collision_type = COLLISION_TYPE_WALL
         space.add(self.body, self.shape)
         self.p1 = p1
         self.p2 = p2
