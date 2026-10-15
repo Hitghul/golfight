@@ -75,6 +75,8 @@ Priorités : **Doit** (MVP) · **Devrait** (important) · **Bonus** (si le temps
 | F5 | Indicateur de vitesse et seuil de tir | Devrait | 1 | Fait |
 | F6 | Collision entre les deux balles | Doit | 3 | À faire |
 | F7 | Mode solo | Doit | 2 | Fait |
+| F8 | Ajout des objets de base de la phase de piégeage | Doit | 2 | À faire |
+
 
 ### Multijoueur et lobby
 | ID | Fonctionnalité | Priorité | Sprint | Statut |
