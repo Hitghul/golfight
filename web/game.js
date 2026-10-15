@@ -6,11 +6,16 @@ let level = null;
 let ball = null;
 let aimStart = null;
 let mouse = null;
+let scored = false;
 
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
   if (Array.isArray(data)) ball = data;
-  else level = data;
+  else if (data === "scored") scored = true;
+  else {
+    level = data;
+    scored = false;
+  }
 };
 
 function mousePos(event) {
@@ -19,6 +24,7 @@ function mousePos(event) {
 }
 
 canvas.onmousedown = (event) => {
+  if (scored) return;
   aimStart = mouse = mousePos(event);
 };
 
@@ -57,12 +63,21 @@ function draw() {
     for (const [x1, y1, x2, y2] of level.walls) {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
-    drawCircle(ball[0], ball[1], 10, "white");
+    if (!scored) drawCircle(ball[0], ball[1], 10, "white");
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
     ctx.fillText(`Score : ${level.score}`, 20, 45);
     if (aimStart) {
       drawLine(ball[0], ball[1], ball[0] + aimStart[0] - mouse[0], ball[1] + aimStart[1] - mouse[1], 4, "yellow");
+    }
+    if (scored) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "gold";
+      ctx.textAlign = "center";
+      ctx.font = "bold 50px Arial";
+      ctx.fillText("Scored !", canvas.width / 2, canvas.height / 2);
+      ctx.textAlign = "left";
     }
   }
   requestAnimationFrame(draw);

@@ -38,6 +38,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             update_space(self.space)
             if self.hole.is_ball_in(self.ball):
                 self.score += 1
+                await self.send_json("scored")
+                await asyncio.sleep(2)
                 await self.load_level()
             await self.send_json(self.ball.pos)
             await asyncio.sleep(1 / 60)
