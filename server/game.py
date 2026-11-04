@@ -19,8 +19,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def load_level(self):
         self.level = load_raw_map_data(get_random_map_name())
         self.space = create_space()
-        self.walls, self.ball, self.hole = build_level(self.space, self.level)
+        self.walls, ball, self.hole = build_level(self.space, self.level)
+        self.balls = [ball]
         self.slingshot = Slingshot()
+        self.turn = 0
         self.hits = 0
         await self.send_json({"type": "level", **self.level, "score": self.score, "max_power": self.slingshot.max_power})
 
@@ -29,19 +31,23 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         self.shoot(start, end)
 
     def shoot(self, start, end):
-        if self.ball.is_stopped():
-            self.slingshot.start(start, self.ball)
-            if self.slingshot.release(end, self.ball):
+        ball = self.balls[self.turn]
+        if ball.is_stopped():
+            self.slingshot.start(start, ball)
+            if self.slingshot.release(end, ball):
                 self.hits += 1
 
     async def game_loop(self):
         while self.connected:
-            self.hole.apply_gravity(self.ball)
+            for ball in self.balls:
+                self.hole.apply_gravity(ball)
             update_space(self.space)
-            if self.hole.is_ball_in(self.ball):
-                self.score += 1
-                await self.send_json({"type": "scored"})
-                await asyncio.sleep(2)
-                await self.load_level()
-            await self.send_json({"type": "state", "pos": self.ball.pos, "can_shoot": self.ball.is_stopped(), "hits": self.hits})
+            for ball in self.balls:
+                if self.hole.is_ball_in(ball):
+                    self.score += 1
+                    await self.send_json({"type": "scored"})
+                    await asyncio.sleep(2)
+                    await self.load_level()
+                    break
+            await self.send_json({"type": "state", "balls": [ball.pos for ball in self.balls], "turn": self.turn, "can_shoot": self.balls[self.turn].is_stopped(), "hits": self.hits})
             await asyncio.sleep(1 / 60)

@@ -3,7 +3,8 @@ const ctx = canvas.getContext("2d");
 
 let ws = null;
 let level = null;
-let ball = null;
+let balls = null;
+let turn = 0;
 let canShoot = false;
 let aimStart = null;
 let hits = 0;
@@ -16,7 +17,8 @@ function onMessage(event) {
     level = data;
     scored = false;
   } else if (data.type === "state") {
-    ball = data.pos;
+    balls = data.balls;
+    turn = data.turn;
     canShoot = data.can_shoot;
     hits = data.hits;
   } else if (data.type === "scored") {
@@ -31,7 +33,7 @@ function showScreen(id) {
 
 function backToMenu() {
   ws.close();
-  ball = null;
+  balls = null;
   showScreen("menu");
 }
 
@@ -48,7 +50,7 @@ function mousePos(event) {
 }
 
 canvas.onmousedown = (event) => {
-  if (!ball || !canShoot || scored) return;
+  if (!balls || !canShoot || scored) return;
   aimStart = mouse = mousePos(event);
 };
 
@@ -82,12 +84,14 @@ function draw() {
   ctx.fillStyle = "#228b22";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (ball) {
+  if (balls) {
     drawCircle(level.hole_pos[0], level.hole_pos[1], 15, "black");
     for (const [x1, y1, x2, y2] of level.walls) {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
-    if (!scored) drawCircle(ball[0], ball[1], 10, "white");
+    for (let player = 0; player < balls.length; player++) {
+      if (!scored) drawCircle(balls[player][0], balls[player][1], 10, "white");
+    }
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
     ctx.fillText(`Score : ${level.score}`, 20, 45);
@@ -96,7 +100,8 @@ function draw() {
       const dx = aimStart[0] - mouse[0];
       const dy = aimStart[1] - mouse[1];
       const scale = Math.min(1, level.max_power / Math.hypot(dx, dy));
-      drawLine(ball[0], ball[1], ball[0] + dx * scale, ball[1] + dy * scale, 4, "yellow");
+      const [x, y] = balls[turn];
+      drawLine(x, y, x + dx * scale, y + dy * scale, 4, "yellow");
     }
     if (scored) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
