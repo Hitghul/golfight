@@ -1,22 +1,39 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const ws = new WebSocket(location.origin.replace("http", "ws") + "/ws");
 
+let ws = null;
 let level = null;
 let ball = null;
 let aimStart = null;
 let mouse = null;
 let scored = false;
 
-ws.onmessage = (event) => {
+function onMessage(event) {
   const data = JSON.parse(event.data);
   if (Array.isArray(data)) ball = data;
   else if (data === "scored") scored = true;
   else {
     level = data;
-    scored = false;
+        scored = false;
   }
-};
+}
+
+function showScreen(id) {
+  for (const screen of document.querySelectorAll(".screen")) screen.hidden = true;
+  document.getElementById(id).hidden = false;
+}
+
+function backToMenu() {
+  ws.close();
+  ball = null;
+  showScreen("menu");
+}
+
+function startSolo() {
+  showScreen("solo");
+  ws = new WebSocket(location.origin.replace("http", "ws") + "/ws");
+  ws.onmessage = onMessage;
+}
 
 function mousePos(event) {
   const rect = canvas.getBoundingClientRect();

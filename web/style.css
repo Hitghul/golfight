@@ -1,4 +1,19 @@
 body {
   margin: 0;
   background: #228b22;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+
+h1 {
+  font-size: 72px;
+}
+
+button {
+  display: block;
+  width: 200px;
+  margin: 15px auto;
+  padding: 10px;
+  font-size: 22px;
 }
