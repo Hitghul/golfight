@@ -5,8 +5,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="menu" class="screen">
+    <div id="home" class="screen">
     <h1>GOLFIGHT</h1>
+    <button onclick="showScreen('menu')">Play</button>
+  </div>
+  <div id="menu" class="screen" hidden>
+    <h1>MENU</h1>
     <button onclick="startSolo()">Solo</button>
     <button onclick="showScreen('versus')">1 Vs 1</button>
   </div>
