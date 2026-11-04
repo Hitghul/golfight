@@ -3,5 +3,5 @@ SECRET_KEY = "golfight"
 DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
-ROOT_URLCONF = "server.urls"
-ASGI_APPLICATION = "server.asgi.application"
+ROOT_URLCONF = "config.urls"
+ASGI_APPLICATION = "config.asgi.application"
