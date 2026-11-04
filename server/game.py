@@ -4,6 +4,7 @@ from src.core.physics import create_space, update_space
 from src.levels.map_loader import load_raw_map_data, get_random_map_name
 from src.levels.level_factory import build_level
 from src.systems.slingshot import Slingshot
+from src.constants import SHOOT_SPEED_THRESHOLD
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -41,5 +42,5 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await self.send_json({"type": "scored"})
                 await asyncio.sleep(2)
                 await self.load_level()
-            await self.send_json({"type": "state", "pos": self.ball.pos,})
+            await self.send_json({"type": "state", "pos": self.ball.pos, "can_shoot": self.ball.is_stopped()})
             await asyncio.sleep(1 / 60)

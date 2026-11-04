@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 let ws = null;
 let level = null;
 let ball = null;
+let canShoot = false;
 let aimStart = null;
 let mouse = null;
 let scored = false;
@@ -15,6 +16,7 @@ function onMessage(event) {
     scored = false;
   } else if (data.type === "state") {
     ball = data.pos;
+    canShoot = data.can_shoot;
   } else if (data.type === "scored") {
     scored = true;
   }
@@ -43,7 +45,7 @@ function mousePos(event) {
 }
 
 canvas.onmousedown = (event) => {
-  if (scored) return;
+  if (!ball || !canShoot || scored) return;
   aimStart = mouse = mousePos(event);
 };
 
