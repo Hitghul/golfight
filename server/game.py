@@ -2,7 +2,7 @@ import asyncio
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from src.core.physics import create_space, update_space
 from src.levels.map_loader import load_raw_map_data, get_random_map_name
-from src.levels.level_factory import build_level
+from src.levels.level_factory import build_level, build_versus_level
 from src.systems.slingshot import Slingshot
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
@@ -21,8 +21,12 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def load_level(self):
         self.level = load_raw_map_data(get_random_map_name())
         self.space = create_space()
-        self.walls, ball, self.hole = build_level(self.space, self.level)
-        self.balls = [ball]
+        if self.players == 1:
+            self.walls, ball, self.hole = build_level(self.space, self.level)
+            self.balls = [ball]
+        else:
+            self.walls, ball1, ball2, self.hole = build_versus_level(self.space, self.level)
+            self.balls = [ball1, ball2]
         self.slingshot = Slingshot()
         self.turn = 0
         self.hits = [0] * self.players
@@ -38,6 +42,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             self.slingshot.start(start, ball)
             if self.slingshot.release(end, ball):
                 self.hits[self.turn] += 1
+                self.turn = (self.turn + 1) % self.players
 
     async def game_loop(self):
         while self.connected:
@@ -53,3 +58,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                     break
             await self.send_json({"type": "state", "balls": [ball.pos for ball in self.balls], "turn": self.turn, "can_shoot": self.balls[self.turn].is_stopped(), "hits": self.hits})
             await asyncio.sleep(1 / 60)
+
+
+class VersusConsumer(GameConsumer):
+    players = 2

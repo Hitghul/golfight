@@ -12,16 +12,12 @@
   <div id="menu" class="screen" hidden>
     <h1>MENU</h1>
     <button onclick="startGame('/ws')">Solo</button>
-    <button onclick="showScreen('versus')">1 Vs 1</button>
+    <button onclick="startGame('/ws/versus')">1 Vs 1</button>
     <button onclick="showScreen('home')">Leave</button>
   </div>
   <div id="play" class="screen" hidden>
     <button onclick="backToMenu()">Menu</button>
     <canvas id="game" width="1024" height="768"></canvas>
-  </div>
-  <div id="versus" class="screen" hidden>
-    <button onclick="showScreen('menu')">Menu</button>
-    <p>In development</p>
   </div>
   <script src="game.js"></script>
 </body>
