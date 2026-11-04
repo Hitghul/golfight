@@ -92,7 +92,10 @@ function draw() {
     ctx.fillText(`Score : ${level.score}`, 20, 45);
     ctx.fillText(`Hits : ${hits}`, 20, 85);
     if (aimStart) {
-      drawLine(ball[0], ball[1], ball[0] + aimStart[0] - mouse[0], ball[1] + aimStart[1] - mouse[1], 4, "yellow");
+      const dx = aimStart[0] - mouse[0];
+      const dy = aimStart[1] - mouse[1];
+      const scale = Math.min(1, level.max_power / Math.hypot(dx, dy));
+      drawLine(ball[0], ball[1], ball[0] + dx * scale, ball[1] + dy * scale, 4, "yellow");
     }
     if (scored) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
