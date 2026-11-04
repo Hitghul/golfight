@@ -21,7 +21,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         self.space = create_space()
         self.walls, self.ball, self.hole = build_level(self.space, self.level)
         self.slingshot = Slingshot()
-        await self.send_json({**self.level, "score": self.score})
+        await self.send_json({"type": "level", **self.level, "score": self.score})
 
     async def receive_json(self, content):
         start, end = content
@@ -38,8 +38,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             update_space(self.space)
             if self.hole.is_ball_in(self.ball):
                 self.score += 1
-                await self.send_json("scored")
+                await self.send_json({"type": "scored"})
                 await asyncio.sleep(2)
                 await self.load_level()
-            await self.send_json(self.ball.pos)
+            await self.send_json({"type": "state", "pos": self.ball.pos,})
             await asyncio.sleep(1 / 60)

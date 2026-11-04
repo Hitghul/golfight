@@ -10,11 +10,13 @@ let scored = false;
 
 function onMessage(event) {
   const data = JSON.parse(event.data);
-  if (Array.isArray(data)) ball = data;
-  else if (data === "scored") scored = true;
-  else {
+  if (data.type === "level") {
     level = data;
-        scored = false;
+    scored = false;
+  } else if (data.type === "state") {
+    ball = data.pos;
+  } else if (data.type === "scored") {
+    scored = true;
   }
 }
 
