@@ -52,11 +52,11 @@ canvas.onmousedown = (event) => {
   aimStart = mouse = mousePos(event);
 };
 
-canvas.onmousemove = (event) => {
+window.onmousemove = (event) => {
   mouse = mousePos(event);
 };
 
-canvas.onmouseup = (event) => {
+window.onmouseup = (event) => {
   if (!aimStart) return;
   ws.send(JSON.stringify([aimStart, mousePos(event)]));
   aimStart = null;
