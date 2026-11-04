@@ -48,7 +48,7 @@ python main.py
 **5. Lancer le site en local**
 
 ```bash
-daphne server.asgi:application
+daphne config.asgi:application
 
 ```
 

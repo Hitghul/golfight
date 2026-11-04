@@ -5,4 +5,4 @@ services:
     plan: free
     region: frankfurt
     buildCommand: pip install -r requirements.txt
-    startCommand: daphne -b 0.0.0.0 -p $PORT server.asgi:application
+    startCommand: daphne -b 0.0.0.0 -p $PORT config.asgi:application

@@ -5,6 +5,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    {{ user.username }}
+    <button type="submit">Logout</button>
+  </form>
   <canvas id="game" width="1024" height="768"></canvas>
   <script src="game.js"></script>
 </body>
