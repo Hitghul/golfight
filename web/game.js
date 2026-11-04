@@ -43,7 +43,8 @@ function startSolo() {
 
 function mousePos(event) {
   const rect = canvas.getBoundingClientRect();
-  return [event.clientX - rect.left, event.clientY - rect.top];
+  const ratio = canvas.width / rect.width;
+  return [(event.clientX - rect.left) * ratio, (event.clientY - rect.top) * ratio];
 }
 
 canvas.onmousedown = (event) => {
