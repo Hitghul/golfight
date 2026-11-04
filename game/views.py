@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.views.static import serve
 
-# Create your views here.
+
+@login_required
+def home(request):
+    return serve(request, "index.html", document_root="web")
