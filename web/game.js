@@ -1,32 +1,64 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const ws = new WebSocket(location.origin.replace("http", "ws") + "/ws");
 
+let ws = null;
 let level = null;
-let ball = null;
+let balls = null;
+let turn = 0;
+let canShoot = false;
 let aimStart = null;
+let hits = [];
 let mouse = null;
+let winner = null;
 
-ws.onmessage = (event) => {
+function onMessage(event) {
   const data = JSON.parse(event.data);
-  if (Array.isArray(data)) ball = data;
-  else level = data;
-};
+  if (data.type === "level") {
+    level = data;
+    winner = null;
+  } else if (data.type === "state") {
+    balls = data.balls;
+    turn = data.turn;
+    canShoot = data.can_shoot;
+    hits = data.hits;
+  } else if (data.type === "scored") {
+    winner = data.player;
+  }
+}
+
+function showScreen(id) {
+  for (const screen of document.querySelectorAll(".screen")) screen.hidden = true;
+  document.getElementById(id).hidden = false;
+}
+
+function backToMenu() {
+  ws.close();
+  balls = null;
+  showScreen("menu");
+}
+
+function startGame(path) {
+  showScreen("play");
+  ws = new WebSocket(location.origin.replace("http", "ws") + path);
+  ws.onmessage = onMessage;
+}
 
 function mousePos(event) {
   const rect = canvas.getBoundingClientRect();
-  return [event.clientX - rect.left, event.clientY - rect.top];
+  const ratio = canvas.width / rect.width;
+  return [(event.clientX - rect.left) * ratio, (event.clientY - rect.top) * ratio];
 }
 
 canvas.onmousedown = (event) => {
+  if (!balls || !canShoot || winner !== null) return;
   aimStart = mouse = mousePos(event);
 };
 
-canvas.onmousemove = (event) => {
+window.onmousemove = (event) => {
   mouse = mousePos(event);
 };
 
-canvas.onmouseup = (event) => {
+window.onmouseup = (event) => {
   if (!aimStart) return;
   ws.send(JSON.stringify([aimStart, mousePos(event)]));
   aimStart = null;
@@ -52,17 +84,40 @@ function draw() {
   ctx.fillStyle = "#228b22";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (ball) {
+  if (balls) {
     drawCircle(level.hole_pos[0], level.hole_pos[1], 15, "black");
     for (const [x1, y1, x2, y2] of level.walls) {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
-    drawCircle(ball[0], ball[1], 10, "white");
+    for (let player = 0; player < balls.length; player++) {
+      if (player !== winner) drawCircle(balls[player][0], balls[player][1], 10, `rgb(${level.colors[player]})`);
+    }
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
-    ctx.fillText(`Score : ${level.score}`, 20, 45);
+    ctx.fillText(`Score : ${level.score.join(" - ")}`, 20, 45);
+    for (let player = 0; player < hits.length; player++) {
+      ctx.fillStyle = `rgb(${level.colors[player]})`;
+      ctx.fillText(`Hits : ${hits[player]}`, 20, 85 + 40 * player);
+    }
+    if (balls.length > 1) {
+      ctx.fillStyle = `rgb(${level.colors[turn]})`;
+      ctx.fillText(`Turn : Player ${turn + 1}`, canvas.width - 250, 45);
+    }
     if (aimStart) {
-      drawLine(ball[0], ball[1], ball[0] + aimStart[0] - mouse[0], ball[1] + aimStart[1] - mouse[1], 4, "yellow");
+      const dx = aimStart[0] - mouse[0];
+      const dy = aimStart[1] - mouse[1];
+      const scale = Math.min(1, level.max_power / Math.hypot(dx, dy));
+      const [x, y] = balls[turn];
+      drawLine(x, y, x + dx * scale, y + dy * scale, 4, "yellow");
+    }
+    if (winner !== null) {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "gold";
+      ctx.textAlign = "center";
+      ctx.font = "bold 50px Arial";
+      ctx.fillText(balls.length > 1 ? `Player ${winner + 1} wins !` : "Scored !", canvas.width / 2, canvas.height / 2);
+      ctx.textAlign = "left";
     }
   }
   requestAnimationFrame(draw);

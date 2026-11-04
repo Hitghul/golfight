@@ -5,12 +5,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    {{ user.username }}
-    <button type="submit">Logout</button>
-  </form>
-  <canvas id="game" width="1024" height="768"></canvas>
+    <div id="home" class="screen">
+    <h1>GOLFIGHT</h1>
+    <button onclick="showScreen('menu')">Play</button>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      {{ user.username }}
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+  <div id="menu" class="screen" hidden>
+    <h1>MENU</h1>
+    <button onclick="startGame('/ws')">Solo</button>
+    <button onclick="startGame('/ws/versus')">1 Vs 1</button>
+    <button onclick="showScreen('home')">Leave</button>
+  </div>
+  <div id="play" class="screen" hidden>
+    <button onclick="backToMenu()">Menu</button>
+    <canvas id="game" width="1024" height="768"></canvas>
+  </div>
   <script src="game.js"></script>
 </body>
 </html>
