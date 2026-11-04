@@ -26,7 +26,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         self.slingshot = Slingshot()
         self.turn = 0
         self.hits = [0] * self.players
-        await self.send_json({"type": "level", **self.level, "score": self.score, "max_power": self.slingshot.max_power})
+        await self.send_json({"type": "level", **self.level, "score": self.score, "max_power": self.slingshot.max_power, "colors": [ball.color for ball in self.balls]})
 
     async def receive_json(self, content):
         start, end = content

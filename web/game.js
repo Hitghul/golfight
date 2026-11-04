@@ -90,12 +90,13 @@ function draw() {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
     for (let player = 0; player < balls.length; player++) {
-      if (!scored) drawCircle(balls[player][0], balls[player][1], 10, "white");
+      if (!scored) drawCircle(balls[player][0], balls[player][1], 10, `rgb(${level.colors[player]})`);
     }
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
     ctx.fillText(`Score : ${level.score.join(" - ")}`, 20, 45);
     for (let player = 0; player < hits.length; player++) {
+      ctx.fillStyle = `rgb(${level.colors[player]})`;
       ctx.fillText(`Hits : ${hits[player]}`, 20, 85 + 40 * player);
     }
     if (aimStart) {
