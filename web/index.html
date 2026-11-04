@@ -8,10 +8,15 @@
     <div id="menu" class="screen">
     <h1>GOLFIGHT</h1>
     <button onclick="startSolo()">Solo</button>
+    <button onclick="showScreen('versus')">1 Vs 1</button>
   </div>
   <div id="solo" class="screen" hidden>
     <button onclick="backToMenu()">Menu</button>
     <canvas id="game" width="1024" height="768"></canvas>
+  </div>
+  <div id="versus" class="screen" hidden>
+    <button onclick="showScreen('menu')">Menu</button>
+    <p>In development</p>
   </div>
   <script src="game.js"></script>
 </body>
