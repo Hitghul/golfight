@@ -7,7 +7,7 @@ let balls = null;
 let turn = 0;
 let canShoot = false;
 let aimStart = null;
-let hits = 0;
+let hits = [];
 let mouse = null;
 let scored = false;
 
@@ -94,8 +94,10 @@ function draw() {
     }
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
-    ctx.fillText(`Score : ${level.score}`, 20, 45);
-    ctx.fillText(`Hits : ${hits}`, 20, 85);
+    ctx.fillText(`Score : ${level.score.join(" - ")}`, 20, 45);
+    for (let player = 0; player < hits.length; player++) {
+      ctx.fillText(`Hits : ${hits[player]}`, 20, 85 + 40 * player);
+    }
     if (aimStart) {
       const dx = aimStart[0] - mouse[0];
       const dy = aimStart[1] - mouse[1];
