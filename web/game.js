@@ -37,9 +37,9 @@ function backToMenu() {
   showScreen("menu");
 }
 
-function startSolo() {
-  showScreen("solo");
-  ws = new WebSocket(location.origin.replace("http", "ws") + "/ws");
+function startGame(path) {
+  showScreen("play");
+  ws = new WebSocket(location.origin.replace("http", "ws") + path);
   ws.onmessage = onMessage;
 }
 
