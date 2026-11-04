@@ -99,6 +99,10 @@ function draw() {
       ctx.fillStyle = `rgb(${level.colors[player]})`;
       ctx.fillText(`Hits : ${hits[player]}`, 20, 85 + 40 * player);
     }
+    if (balls.length > 1) {
+      ctx.fillStyle = `rgb(${level.colors[turn]})`;
+      ctx.fillText(`Turn : Player ${turn + 1}`, canvas.width - 250, 45);
+    }
     if (aimStart) {
       const dx = aimStart[0] - mouse[0];
       const dy = aimStart[1] - mouse[1];
