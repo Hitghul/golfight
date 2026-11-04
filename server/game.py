@@ -52,7 +52,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             for player, ball in enumerate(self.balls):
                 if self.hole.is_ball_in(ball):
                     self.score[player] += 1
-                    await self.send_json({"type": "scored"})
+                    await self.send_json({"type": "scored", "player": player})
                     await asyncio.sleep(2)
                     await self.load_level()
                     break

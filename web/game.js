@@ -9,20 +9,20 @@ let canShoot = false;
 let aimStart = null;
 let hits = [];
 let mouse = null;
-let scored = false;
+let winner = null;
 
 function onMessage(event) {
   const data = JSON.parse(event.data);
   if (data.type === "level") {
     level = data;
-    scored = false;
+    winner = null;
   } else if (data.type === "state") {
     balls = data.balls;
     turn = data.turn;
     canShoot = data.can_shoot;
     hits = data.hits;
   } else if (data.type === "scored") {
-    scored = true;
+    winner = data.player;
   }
 }
 
@@ -50,7 +50,7 @@ function mousePos(event) {
 }
 
 canvas.onmousedown = (event) => {
-  if (!balls || !canShoot || scored) return;
+  if (!balls || !canShoot || winner !== null) return;
   aimStart = mouse = mousePos(event);
 };
 
@@ -90,7 +90,7 @@ function draw() {
       drawLine(x1, y1, x2, y2, 10, "#8b4513");
     }
     for (let player = 0; player < balls.length; player++) {
-      if (!scored) drawCircle(balls[player][0], balls[player][1], 10, `rgb(${level.colors[player]})`);
+      if (player !== winner) drawCircle(balls[player][0], balls[player][1], 10, `rgb(${level.colors[player]})`);
     }
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
@@ -110,13 +110,13 @@ function draw() {
       const [x, y] = balls[turn];
       drawLine(x, y, x + dx * scale, y + dy * scale, 4, "yellow");
     }
-    if (scored) {
+    if (winner !== null) {
       ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "gold";
       ctx.textAlign = "center";
       ctx.font = "bold 50px Arial";
-      ctx.fillText("Scored !", canvas.width / 2, canvas.height / 2);
+      ctx.fillText(balls.length > 1 ? `Player ${winner + 1} wins !` : "Scored !", canvas.width / 2, canvas.height / 2);
       ctx.textAlign = "left";
     }
   }
