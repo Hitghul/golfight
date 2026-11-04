@@ -4,7 +4,6 @@ from src.core.physics import create_space, update_space
 from src.levels.map_loader import load_raw_map_data, get_random_map_name
 from src.levels.level_factory import build_level
 from src.systems.slingshot import Slingshot
-from src.constants import SHOOT_SPEED_THRESHOLD
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
