@@ -6,6 +6,7 @@ let level = null;
 let ball = null;
 let canShoot = false;
 let aimStart = null;
+let hits = 0;
 let mouse = null;
 let scored = false;
 
@@ -17,6 +18,7 @@ function onMessage(event) {
   } else if (data.type === "state") {
     ball = data.pos;
     canShoot = data.can_shoot;
+    hits = data.hits;
   } else if (data.type === "scored") {
     scored = true;
   }
@@ -88,6 +90,7 @@ function draw() {
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
     ctx.fillText(`Score : ${level.score}`, 20, 45);
+    ctx.fillText(`Hits : ${hits}`, 20, 85);
     if (aimStart) {
       drawLine(ball[0], ball[1], ball[0] + aimStart[0] - mouse[0], ball[1] + aimStart[1] - mouse[1], 4, "yellow");
     }
