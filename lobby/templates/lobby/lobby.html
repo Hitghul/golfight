@@ -1,0 +1,14 @@
+<h1>Lobby - {{ user.username }}</h1>
+<h2>Online players</h2>
+
+<p id="players"></p>
+
+<script>
+  const socket = new WebSocket(location.origin.replace("http", "ws") + "/ws/lobby");
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    document.getElementById("players").textContent = data.players.join(", ");
+  };
+
+</script>
