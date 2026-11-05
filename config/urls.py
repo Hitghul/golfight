@@ -6,5 +6,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", include("game.urls")),
+    path("lobby/", include("lobby.urls")),
     path("<path:path>", serve, {"document_root": "web"}),
 ]
