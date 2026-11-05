@@ -47,12 +47,23 @@ python main.py
 
 **5. Lancer le site en local**
 
+Une seule fois : installer et démarrer PostgreSQL, puis créer la base :
+
 ```bash
+sudo -u postgres psql -c "CREATE USER golfight WITH PASSWORD 'golfight';"
+sudo -u postgres psql -c "CREATE DATABASE golfight_projet_info OWNER golfight;"
+
+```
+
+À chaque lancement :
+
+```bash
+python manage.py migrate
 daphne config.asgi:application
 
 ```
 
-Puis ouvrir http://localhost:8000 dans le navigateur. 
+Puis ouvrir http://localhost:8000 dans le navigateur.
 
 ---
 

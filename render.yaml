@@ -1,8 +1,36 @@
+databases:
+  - name: golfight-db
+    plan: free
+    region: frankfurt
+    databaseName: golfight_projet_info
+    user: golfight
+
 services:
   - type: web
     name: golfight
     runtime: python
     plan: free
     region: frankfurt
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python manage.py migrate
     startCommand: daphne -b 0.0.0.0 -p $PORT config.asgi:application
+    envVars:
+      - key: DB_NAME
+        fromDatabase:
+          name: golfight-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: golfight-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: golfight-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: golfight-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: golfight-db
+          property: port

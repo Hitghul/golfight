@@ -3,3 +3,4 @@ pymunk
 django
 channels
 daphne
+psycopg[binary]

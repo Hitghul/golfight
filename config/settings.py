@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -14,6 +15,8 @@ SECRET_KEY = 'Golfight'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://golfight.onrender.com']
 
 
 # Application definition
@@ -65,11 +68,11 @@ ASGI_APPLICATION = "config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "golfight_projet_info",
-        "USER": "golfight",
-        "PASSWORD": "golfight",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME", "golfight_projet_info"),
+        "USER": os.environ.get("DB_USER", "golfight"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "golfight"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
