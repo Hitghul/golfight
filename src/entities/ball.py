@@ -7,6 +7,8 @@ class Ball:
         self.color = color
         self.player_id = player_id
         self.last_hit_impulse = 0.0
+        self.last_safe_pos = (x, y)
+        self.penalties = 0
         
         self.body = pymunk.Body(BALL_MASS, pymunk.moment_for_circle(BALL_MASS, 0, BALL_RADIUS))
         self.body.position = (x, y)

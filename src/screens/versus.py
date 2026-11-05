@@ -16,7 +16,7 @@ class VersusScene(Scene):
         self.last_collision_info = ""
 
         self.space = create_space(on_ball_collision=self._on_ball_collision)
-        self.walls, self.ball1, self.ball2, self.hole = build_versus_level(
+        self.walls, self.ball1, self.ball2, self.hole, self.zones = build_versus_level(
             self.space, load_raw_map_data(get_random_map_name())
         )
 
@@ -67,6 +67,16 @@ class VersusScene(Scene):
 
     def update(self):
         if self.winner is None:
+            from src.constants import FPS
+            dt = 1.0 / FPS
+            for zone in self.zones:
+                if zone.apply(self.ball1, dt) == "WATER_HAZARD":
+                    self.score_p1 += 1
+                    self.last_collision_info = "P1 à l'eau (+1 pénalité)"
+                if zone.apply(self.ball2, dt) == "WATER_HAZARD":
+                    self.score_p2 += 1
+                    self.last_collision_info = "P2 à l'eau (+1 pénalité)"
+
             self.hole.apply_gravity(self.ball1)
             self.hole.apply_gravity(self.ball2)
 
@@ -94,7 +104,7 @@ class VersusScene(Scene):
         if not hide_p2:
             balls_to_draw.append(self.ball2)
 
-        draw_entities(screen, self.walls, balls_to_draw, self.hole)
+        draw_entities(screen, self.walls, balls_to_draw, self.hole, zones=self.zones)
 
         # Active player indicator
         if self.winner is None:

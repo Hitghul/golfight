@@ -19,7 +19,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def load_level(self):
         self.level = load_raw_map_data(get_random_map_name())
         self.space = create_space()
-        self.walls, self.ball, self.hole = build_level(self.space, self.level)
+        self.walls, self.ball, self.hole, self.zones = build_level(self.space, self.level)
         self.slingshot = Slingshot()
         await self.send_json({**self.level, "score": self.score})
 
@@ -34,6 +34,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     async def game_loop(self):
         while self.connected:
+            dt = 1 / 60
+            for zone in self.zones:
+                if zone.apply(self.ball, dt) == "WATER_HAZARD":
+                    self.score += 1
             self.hole.apply_gravity(self.ball)
             update_space(self.space)
             if self.hole.is_ball_in(self.ball):

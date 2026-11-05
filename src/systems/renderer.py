@@ -1,8 +1,17 @@
 import pygame
-from src.constants import BG_COLOR, WALL_COLOR, BALL_COLOR, HOLE_COLOR, BALL_RADIUS, HOLE_RADIUS, AIM_COLOR
+from src.constants import (
+    BG_COLOR, WALL_COLOR, BALL_COLOR, HOLE_COLOR, BALL_RADIUS, HOLE_RADIUS, AIM_COLOR,
+    SAND_COLOR, WATER_COLOR
+)
 
-def draw_entities(screen, walls, balls, hole, hide_ball=False):
+def draw_entities(screen, walls, balls, hole, zones=None, hide_ball=False):
     screen.fill(BG_COLOR)
+    if zones:
+        for z in zones:
+            color = SAND_COLOR if z.zone_type == "sand" else WATER_COLOR
+            pygame.draw.rect(screen, color, z.rect, border_radius=4)
+            border_col = (180, 130, 20) if z.zone_type == "sand" else (20, 100, 200)
+            pygame.draw.rect(screen, border_col, z.rect, 1, border_radius=4)
     pygame.draw.circle(screen, HOLE_COLOR, hole.pos, HOLE_RADIUS)
     for wall in walls:
         pygame.draw.line(screen, WALL_COLOR, wall.p1, wall.p2, 10)

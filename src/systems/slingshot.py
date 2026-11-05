@@ -26,6 +26,7 @@ class Slingshot:
         vector = self.get_aim_vector(current_pos)
         self.aiming = False
         if vector and math.hypot(*vector) > 10:
+            ball.last_safe_pos = ball.pos
             force = (vector[0] * self.multiplier, vector[1] * self.multiplier)
             ball.body.apply_impulse_at_local_point(force)
             return True

@@ -13,7 +13,7 @@ class SoloScene(Scene):
     def __init__(self):
         self.next = None
         self.space = create_space()
-        self.walls, self.ball, self.hole = build_level(self.space, load_raw_map_data(get_random_map_name()))
+        self.walls, self.ball, self.hole, self.zones = build_level(self.space, load_raw_map_data(get_random_map_name()))
         
         self.slingshot = Slingshot()
         
@@ -74,6 +74,12 @@ class SoloScene(Scene):
         self._was_stopped = is_stopped
 
         if not self.is_won:
+            from src.constants import FPS
+            dt = 1.0 / FPS
+            for zone in self.zones:
+                if zone.apply(self.ball, dt) == "WATER_HAZARD":
+                    self.score += 1
+                    self.add_log("Balle à l'eau (+1 pénalité)")
             self.hole.apply_gravity(self.ball)
 
         update_space(self.space)
@@ -138,7 +144,7 @@ class SoloScene(Scene):
         screen.blit(panel_surf, (20, 100))
 
     def render(self, screen):
-        draw_entities(screen, self.walls, self.ball, self.hole, hide_ball=self.is_won)
+        draw_entities(screen, self.walls, self.ball, self.hole, zones=self.zones, hide_ball=self.is_won)
         
         aim_vector = self.slingshot.get_aim_vector(self.current_mouse_pos)
         draw_aim_line(screen, self.ball.pos, aim_vector)
