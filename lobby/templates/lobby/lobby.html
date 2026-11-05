@@ -1,14 +1,51 @@
 <h1>Lobby - {{ user.username }}</h1>
 <h2>Online players</h2>
 
-<p id="players"></p>
+<ul id="players"></ul>
 
 <script>
+  const myName = "{{ user.username }}";
   const socket = new WebSocket(location.origin.replace("http", "ws") + "/ws/lobby");
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    document.getElementById("players").textContent = data.players.join(", ");
+
+    if (data.type === "players") {
+      showPlayers(data.players);
+    }
+
+    if (data.type === "invite") {
+      const accepted = confirm(data.from + " invites you to play. Accept?");
+      socket.send(JSON.stringify({action: "answer", to: data.from, accepted: accepted}));
+    }
+
+    if (data.type === "answer") {
+      if (data.accepted) {
+        alert(data.from + " accepted");
+      } else {
+        alert(data.from + " refused");
+      }
+    }
   };
 
+  function showPlayers(players) {
+    const list = document.getElementById("players");
+    list.innerHTML = "";
+    for (const name of players) {
+      if (name === myName) {
+        continue;
+      }
+      const item = document.createElement("li");
+      item.textContent = name + " ";
+
+      const button = document.createElement("button");
+      button.textContent = "Invite";
+      button.onclick = () => {
+        socket.send(JSON.stringify({action: "invite", to: name}));
+      };
+
+      item.appendChild(button);
+      list.appendChild(item);
+    }
+  }
 </script>
