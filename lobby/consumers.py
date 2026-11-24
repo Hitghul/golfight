@@ -5,6 +5,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 online_players = {}
 pending_invites = set()
 rooms = {}
+in_room = set()
 room_ids = itertools.count(1)
 MAPS = ["map_square.json", "map_triangle.json", "map_octagon.json"]
 
@@ -23,14 +24,23 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
         await self.send_players()
 
     async def disconnect(self, code):
+        if self.room_id is not None:
+            room = rooms.pop(self.room_id, None)
+            if room is not None:
+                for name in room["players"]:
+                    in_room.discard(name)
         online_players.pop(self.username, None)
         await self.channel_layer.group_discard("lobby", self.channel_name)
         await self.send_players()
 
     async def send_players(self):
+        free = []
+        for name in sorted(online_players):
+            if name not in in_room:
+                free.append(name)
         await self.channel_layer.group_send(
             "lobby",
-            {"type": "players.list", "players": sorted(online_players)},
+            {"type": "players.list", "players": free},
         )
 
     async def players_list(self, event):
@@ -44,6 +54,9 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
         target = content.get("to")
 
         if target not in online_players or target == self.username:
+            return
+
+        if target in in_room or self.username in in_room:
             return
 
         address = online_players[target]
@@ -69,17 +82,24 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                     "map": "map_square.json",
                     "ready": set(),
                 }
+                in_room.add(target)
+                in_room.add(self.username)
                 for name in rooms[room_id]["players"]:
                     await self.channel_layer.send(
                         online_players[name],
                         {"type": "room.joined", "room_id": room_id},
                     )
+                await self.send_players()
 
     async def invite_received(self, event):
         await self.send_json({"type": "invite", "from": event["from"]})
 
     async def invite_answer(self, event):
-        await self.send_json({"type": "answer", "from": event["from"], "accepted": event["accepted"]})
+        await self.send_json({
+            "type": "answer",
+            "from": event["from"],
+            "accepted": event["accepted"],
+        })
 
     async def room_joined(self, event):
         self.room_id = event["room_id"]
@@ -87,7 +107,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
         await self.room_update(event)
 
     async def room_action(self, action, content):
-        if self.room_id is None:
+        if self.room_id not in rooms:
             return
         room = rooms[self.room_id]
 
