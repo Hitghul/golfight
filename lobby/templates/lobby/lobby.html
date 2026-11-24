@@ -44,7 +44,7 @@
     }
 
     if (data.type === "start") {
-      document.getElementById("room-status").textContent = "Game starting on " + data.map;
+      location.href = "/?room=" + data.room_id;
     }
   };
 
