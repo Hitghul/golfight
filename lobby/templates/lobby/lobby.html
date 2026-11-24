@@ -3,6 +3,18 @@
 
 <ul id="players"></ul>
 
+<div id="room" hidden>
+  <h2>Room</h2>
+  <p>Players: <span id="room-players"></span></p>
+  <p>Map: <span id="room-map"></span></p>
+  <button onclick="chooseMap('map_square.json')">Square</button>
+  <button onclick="chooseMap('map_triangle.json')">Triangle</button>
+  <button onclick="chooseMap('map_octagon.json')">Octagon</button>
+  <p>Ready: <span id="room-ready"></span></p>
+  <button onclick="sendReady()">Ready</button>
+  <p id="room-status"></p>
+</div>
+
 <script>
   const myName = "{{ user.username }}";
   const socket = new WebSocket(location.origin.replace("http", "ws") + "/ws/lobby");
@@ -26,6 +38,14 @@
         alert(data.from + " refused");
       }
     }
+
+    if (data.type === "room") {
+      showRoom(data);
+    }
+
+    if (data.type === "start") {
+      document.getElementById("room-status").textContent = "Game starting on " + data.map;
+    }
   };
 
   function showPlayers(players) {
@@ -48,4 +68,20 @@
       list.appendChild(item);
     }
   }
+
+  function showRoom(room) {
+    document.getElementById("room").hidden = false;
+    document.getElementById("room-players").textContent = room.players.join(" vs ");
+    document.getElementById("room-map").textContent = room.map;
+    document.getElementById("room-ready").textContent = room.ready.join(", ");
+  }
+
+  function chooseMap(map) {
+    socket.send(JSON.stringify({action: "map", map: map}));
+  }
+
+  function sendReady() {
+    socket.send(JSON.stringify({action: "ready"}));
+  }
+
 </script>
