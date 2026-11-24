@@ -24,7 +24,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
         await self.send_players()
 
     async def disconnect(self, code):
-        if self.room_id is not None:
+        if self.room_id in rooms and not rooms[self.room_id]["started"]:
             room = rooms.pop(self.room_id, None)
             if room is not None:
                 for name in room["players"]:
@@ -81,6 +81,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                     "players": [target, self.username],
                     "map": "map_square.json",
                     "ready": set(),
+                    "started": False,
                 }
                 in_room.add(target)
                 in_room.add(self.username)
@@ -120,7 +121,8 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             room["ready"].add(self.username)
         await self.channel_layer.group_send(f"room_{self.room_id}", {"type": "room.update"})
         if len(room["ready"]) == 2:
-            await self.channel_layer.group_send(f"room_{self.room_id}", {"type": "game.start", "map": room["map"]})
+            room["started"] = True
+            await self.channel_layer.group_send(f"room_{self.room_id}", {"type": "game.start", "map": room["map"], "room_id": self.room_id})
 
     async def room_update(self, event):
         room = rooms[self.room_id]
@@ -132,4 +134,4 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
         })
 
     async def game_start(self, event):
-        await self.send_json({"type": "start", "map": event["map"]})
+        await self.send_json({"type": "start", "map": event["map"], "room_id": event["room_id"]})
