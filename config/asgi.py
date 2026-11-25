@@ -10,6 +10,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from game.consumers import GameConsumer, VersusConsumer
 from lobby.consumers import LobbyConsumer
+from game.online_consumers import OnlineConsumer
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
@@ -17,5 +18,6 @@ application = ProtocolTypeRouter({
         path("ws", GameConsumer.as_asgi()),
         path("ws/versus", VersusConsumer.as_asgi()),
         path("ws/lobby", LobbyConsumer.as_asgi()),
+        path("ws/online/<int:room_id>", OnlineConsumer.as_asgi()),
     ])),
 })
