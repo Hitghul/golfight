@@ -17,13 +17,18 @@ function onMessage(event) {
   if (data.type === "level") {
     level = data;
     winner = null;
+    document.getElementById("vote").hidden = true;
   } else if (data.type === "state") {
     balls = data.balls;
     turn = data.turn;
     canShoot = data.can_shoot;
     hits = data.hits;
-  } else if (data.type === "scored") {
+    } else if (data.type === "scored") {
     winner = data.player;
+    level.score = data.score;
+    if (myPlayer !== null) {
+      document.getElementById("vote").hidden = false;
+    }
   } else if (data.type === "you") {
     myPlayer = data.player;
   }
@@ -38,6 +43,11 @@ function backToMenu() {
   ws.close();
   balls = null;
   showScreen("menu");
+}
+
+function sendVote(choice) {
+    ws.send(JSON.stringify({vote: choice}));
+    document.getElementById("vote").hidden = true;
 }
 
 function startGame(path) {
