@@ -31,6 +31,8 @@ function onMessage(event) {
     }
   } else if (data.type === "you") {
     myPlayer = data.player;
+  } else if (data.type === "quit") {
+    location.href = "/lobby/";
   }
 }
 

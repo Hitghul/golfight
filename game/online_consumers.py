@@ -2,7 +2,7 @@ import asyncio
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
-from lobby.consumers import rooms
+from lobby.consumers import rooms, in_room
 from src.core.physics import create_space, update_space
 from src.levels.level_factory import build_versus_level
 from src.levels.map_loader import load_raw_map_data
@@ -123,6 +123,16 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
             game["votes"].add(self.username)
             if len(game["votes"]) == 2:
                 await self.new_round()
+        elif choice == "quit":
+            await self.end_session()
+
+    async def end_session(self):
+        room = rooms.pop(self.room_id, None)
+        if room is not None:
+            for name in room["players"]:
+                in_room.discard(name)
+        games.pop(self.room_id, None)
+        await self.channel_layer.group_send(f"game_{self.room_id}",{"type": "game.send", "data": {"type": "quit"}}, )
 
     async def new_round(self):
         old = games[self.room_id]
