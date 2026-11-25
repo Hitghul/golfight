@@ -26,6 +26,7 @@ def new_game(map_name):
         "hits": [0, 0],
         "score": [0, 0],
         "connected": set(),
+        "winner": None,
     }
 
 
@@ -69,6 +70,13 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
             for ball in game["balls"]:
                 game["hole"].apply_gravity(ball)
             update_space(game["space"])
+            if game["winner"] is None:
+                for player, ball in enumerate(game["balls"]):
+                    if game["hole"].is_ball_in(ball):
+                        game["winner"] = player
+                        game["score"][player] += 1
+                        await self.channel_layer.group_send(f"game_{self.room_id}",{"type": "game.send", "data": {"type": "scored", "player": player, "score": game["score"]}},)
+                        break
             state = {
                 "type": "state",
                 "balls": [ball.pos for ball in game["balls"]],
@@ -81,6 +89,8 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content):
         game = games[self.room_id]
+        if game["winner"] is not None:
+            return
         if game["turn"] != self.player:
             return
         start, end = content
