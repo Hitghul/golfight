@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: golfight_projet_info
+      POSTGRES_USER: golfight
+      POSTGRES_PASSWORD: golfight
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U golfight -d golfight_projet_info"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  web:
+    build: .
+    environment:
+      DB_NAME: golfight_projet_info
+      DB_USER: golfight
+      DB_PASSWORD: golfight
+      DB_HOST: db
+      DB_PORT: "5432"
+    volumes:
+      - static:/app/staticfiles
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    depends_on:
+      db:
+        condition: service_healthy
+
+  proxy:
+    image: caddy:2-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - static:/static:ro
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  static:

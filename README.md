@@ -4,66 +4,33 @@
 C'est un jeu de mini-golf 2D en vue du dessus, en 1 contre 1. Sa particularité est le placement inversé : chaque joueur choisit où son adversaire commence et où se trouve le trou de son adversaire. 
 Il faut donc piéger l'autre tout en se sortant du piège qu'il nous a tendu.
 ---
-## Installation (doit être 1 seule ligne)
+## Lancer en local (Docker)
 
-**1. Récupérer le projet**
+Prérequis : Docker
+
 ```bash
-git clone [https://github.com/Hitghul/golfight.git](https://github.com/Hitghul/golfight.git)
+git clone https://github.com/Hitghul/golfight.git
 cd golfight
-
+docker compose up -d --build
 ```
 
-**2. Créer et activer l'environnement virtuel**
+Ouvrir http://localhost:8080 et créer un compte
+Pour jouer au mode online sur le même pc, ouvrez une fenêtre normale et une fenêtre de navigation privée
 
-*Sur MacOS / Linux :*
+Arrêter : `docker compose down`
+
+## Lancer la version pygame en local
+
+Prérequis : Python 3
 
 ```bash
 python3 -m venv env
 source env/bin/activate
-
-```
-
-*Sur Windows :*
-
-```cmd
-python -m venv env
-env\Scripts\activate
-
-```
-
-**3. Installer les dépendances**
-
-```bash
 pip install -r requirements.txt
-
-```
-
-**4. Lancer le jeu**
-
-```bash
 python main.py
-
 ```
 
-**5. Lancer le site en local**
-
-Une seule fois : installer et démarrer PostgreSQL, puis créer la base :
-
-```bash
-sudo -u postgres psql -c "CREATE USER golfight WITH PASSWORD 'golfight';"
-sudo -u postgres psql -c "CREATE DATABASE golfight_projet_info OWNER golfight;"
-
-```
-
-À chaque lancement :
-
-```bash
-python manage.py migrate
-daphne config.asgi:application
-
-```
-
-Puis ouvrir http://localhost:8000 dans le navigateur.
+Sous Windows : `python -m venv env` puis `env\Scripts\activate`
 
 ---
 

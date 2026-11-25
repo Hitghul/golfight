@@ -9,6 +9,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     players = 1
 
     async def connect(self):
+        if not self.scope["user"].is_authenticated:
+            await self.close()
+            return
         await self.accept()
         self.connected = True
         self.score = [0] * self.players
@@ -52,7 +55,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             for player, ball in enumerate(self.balls):
                 if self.hole.is_ball_in(ball):
                     self.score[player] += 1
-                    await self.send_json({"type": "scored", "player": player})
+                    await self.send_json({"type": "scored", "player": player, "score": self.score})
                     await asyncio.sleep(2)
                     await self.load_level()
                     break

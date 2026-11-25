@@ -42,6 +42,10 @@ function showScreen(id) {
 }
 
 function backToMenu() {
+  if (roomId) {
+    location.href = "/lobby/";
+    return;
+  }
   ws.close();
   balls = null;
   showScreen("menu");
@@ -58,6 +62,12 @@ function startGame(path) {
   ws.onmessage = onMessage;
 }
 
+function startOnlineGame() {
+  document.getElementById("back-button").textContent = "Leave the game";
+  startGame("/ws/online/" + roomId);
+  ws.onclose = () => location.href = "/lobby/";
+}
+
 function mousePos(event) {
   const rect = canvas.getBoundingClientRect();
   const ratio = canvas.width / rect.width;
@@ -67,7 +77,8 @@ function mousePos(event) {
 canvas.onmousedown = (event) => {
   if (!balls || !canShoot || winner !== null) return;
   if (myPlayer !== null && turn !== myPlayer) return;
-  aimStart = mouse = mousePos(event);
+  aimStart = balls[turn];
+  mouse = mousePos(event);
 };
 
 window.onmousemove = (event) => {
@@ -151,5 +162,5 @@ draw();
 
 const roomId = new URLSearchParams(location.search).get("room");
 if (roomId) {
-  startGame("/ws/online/" + roomId);
+  startOnlineGame();
 }

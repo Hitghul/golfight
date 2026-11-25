@@ -29,7 +29,9 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             if room is not None:
                 for name in room["players"]:
                     in_room.discard(name)
-        online_players.pop(self.username, None)
+                await self.channel_layer.group_send(f"room_{self.room_id}", {"type": "room.closed", "from": self.username})
+        if online_players.get(self.username) == self.channel_name:
+            online_players.pop(self.username)
         await self.channel_layer.group_discard("lobby", self.channel_name)
         await self.send_players()
 
@@ -132,6 +134,10 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             "map": room["map"],
             "ready": sorted(room["ready"]),
         })
+
+    async def room_closed(self, event):
+        self.room_id = None
+        await self.send_json({"type": "room_closed", "from": event["from"]})
 
     async def game_start(self, event):
         await self.send_json({"type": "start", "map": event["map"], "room_id": event["room_id"]})

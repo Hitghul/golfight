@@ -107,10 +107,8 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(f"game_{self.room_id}", self.channel_name)
-        if self.room_id in games:
-            games[self.room_id]["connected"].discard(self.username)
-            if not games[self.room_id]["connected"]:
-                games.pop(self.room_id)
+        if self.room_id in games and self.username in games[self.room_id]["connected"]:
+            await self.end_session()
 
     async def game_send(self, event):
         await self.send_json(event["data"])

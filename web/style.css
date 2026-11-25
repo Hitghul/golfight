@@ -10,12 +10,35 @@ h1 {
   font-size: 72px;
 }
 
+a {
+  color: gold;
+}
+
+input {
+  font-size: 20px;
+  padding: 4px;
+}
+
+.helptext,
+.helptext ul {
+  display: block;
+  font-size: 14px;
+  color: #ddd;
+}
+
 button {
   display: block;
   width: 200px;
   margin: 15px auto;
   padding: 10px;
   font-size: 22px;
+}
+
+button.small {
+  display: inline-block;
+  width: auto;
+  margin: 5px;
+  font-size: 18px;
 }
 
 canvas {
