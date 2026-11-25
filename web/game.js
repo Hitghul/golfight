@@ -127,5 +127,5 @@ draw();
 
 const roomId = new URLSearchParams(location.search).get("room");
 if (roomId) {
-  startGame("/ws/versus");
+  startGame("/ws/online/" + roomId);
 }
