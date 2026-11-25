@@ -27,6 +27,7 @@ def new_game(map_name):
         "score": [0, 0],
         "connected": set(),
         "winner": None,
+        "votes": set(),
     }
 
 
@@ -65,8 +66,8 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json({"type": "you", "player": self.player})
 
     async def game_loop(self):
-        game = games[self.room_id]
         while self.room_id in games:
+            game = games[self.room_id]
             for ball in game["balls"]:
                 game["hole"].apply_gravity(ball)
             update_space(game["space"])
@@ -88,6 +89,9 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
             await asyncio.sleep(1 / 60)
 
     async def receive_json(self, content):
+        if "vote" in content:
+            await self.vote(content["vote"])
+            return
         game = games[self.room_id]
         if game["winner"] is not None:
             return
@@ -110,3 +114,23 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
 
     async def game_send(self, event):
         await self.send_json(event["data"])
+
+    async def vote(self, choice):
+        game = games[self.room_id]
+        if game["winner"] is None:
+            return
+        if choice == "replay":
+            game["votes"].add(self.username)
+            if len(game["votes"]) == 2:
+                await self.new_round()
+
+    async def new_round(self):
+        old = games[self.room_id]
+        game = new_game(rooms[self.room_id]["map"])
+        game["score"] = old["score"]
+        game["connected"] = old["connected"]
+        games[self.room_id] = game
+        await self.channel_layer.group_send(
+            f"game_{self.room_id}",
+            {"type": "game.send", "data": level_message(game)},
+        )
