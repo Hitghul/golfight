@@ -10,6 +10,7 @@ let aimStart = null;
 let hits = [];
 let mouse = null;
 let winner = null;
+let myPlayer = null;
 
 function onMessage(event) {
   const data = JSON.parse(event.data);
@@ -23,6 +24,8 @@ function onMessage(event) {
     hits = data.hits;
   } else if (data.type === "scored") {
     winner = data.player;
+  } else if (data.type === "you") {
+    myPlayer = data.player;
   }
 }
 
@@ -51,6 +54,7 @@ function mousePos(event) {
 
 canvas.onmousedown = (event) => {
   if (!balls || !canShoot || winner !== null) return;
+  if (myPlayer !== null && turn !== myPlayer) return;
   aimStart = mouse = mousePos(event);
 };
 
@@ -101,7 +105,15 @@ function draw() {
     }
     if (balls.length > 1) {
       ctx.fillStyle = `rgb(${level.colors[turn]})`;
-      ctx.fillText(`Turn : Player ${turn + 1}`, canvas.width - 250, 45);
+      let text = `Turn : Player ${turn + 1}`;
+      if (myPlayer !== null) {
+        if (turn === myPlayer) {
+          text = "Your turn";
+        } else {
+          text = "Opponent's turn";
+        }
+      }
+      ctx.fillText(text, canvas.width - 250, 45);
     }
     if (aimStart) {
       const dx = aimStart[0] - mouse[0];

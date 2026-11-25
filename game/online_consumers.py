@@ -61,6 +61,7 @@ class OnlineConsumer(AsyncJsonWebsocketConsumer):
         game = games[self.room_id]
         game["connected"].add(self.username)
         await self.send_json(level_message(game))
+        await self.send_json({"type": "you", "player": self.player})
 
     async def game_loop(self):
         game = games[self.room_id]
