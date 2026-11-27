@@ -2,9 +2,10 @@ import math
 from src.constants import HOLE_RADIUS, FPS
 
 class Hole:
-    def __init__(self, x, y, radius=HOLE_RADIUS):
+    def __init__(self, x, y, radius=HOLE_RADIUS, color=None):
         self.pos = (x, y)
         self.radius = radius
+        self.color = color
         self.influence_radius = radius * 2.0  # 30px autour du centre
         self.attraction_strength = 1400.0     # Réduit : dévie sans trop aspirer les balles rapides
         self.capture_speed = 180.0            # Vitesse maximale pour être aspirée

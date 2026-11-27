@@ -12,7 +12,12 @@ def draw_entities(screen, walls, balls, hole, zones=None, hide_ball=False):
             pygame.draw.rect(screen, color, z.rect, border_radius=4)
             border_col = (180, 130, 20) if z.zone_type == "sand" else (20, 100, 200)
             pygame.draw.rect(screen, border_col, z.rect, 1, border_radius=4)
-    pygame.draw.circle(screen, HOLE_COLOR, hole.pos, HOLE_RADIUS)
+    hole_list = hole if isinstance(hole, (list, tuple)) else [hole]
+    for h in hole_list:
+        if h is not None:
+            pygame.draw.circle(screen, HOLE_COLOR, h.pos, HOLE_RADIUS)
+            if h.color:
+                pygame.draw.circle(screen, h.color, h.pos, HOLE_RADIUS + 3, 2)
     for wall in walls:
         pygame.draw.line(screen, WALL_COLOR, wall.p1, wall.p2, 10)
     if not hide_ball:
